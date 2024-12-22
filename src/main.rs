@@ -16,7 +16,7 @@ async fn main() -> tide::Result<()> {
     let mut app = tide::with_state(db);
     app.at("/").get(|_| async move {
         println!("Getting index");
-        Ok("Enter add_user?name=<name>&email=<email> to add a user, user?id=<id> to get user, and remove_user?id=<id> to remove a user.")
+        Ok("Enter add_user?name=<name>&email=<email> to add a user, user?id=<id> to get user, users to get all users, and remove_user?id=<id> to remove a user.")
     });
     app.at("/add_user")
         .get(|req: Request<DatabaseConnection>| async move {

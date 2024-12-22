@@ -19,7 +19,7 @@ COPY migrations migrations
 COPY .env .
 COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/dockerapp .
 COPY --from=builder /usr/local/cargo/bin/sqlx /usr/bin
-RUN apk update && apk add --no-cache ca-certificates libpq
+RUN apk update && apk add --no-cache ca-certificates libpq curl
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 ENV PORT=1337

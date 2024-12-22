@@ -10,13 +10,14 @@ services:
     volumes:
       - cargo:/usr/local/cargo
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD-SHELL", "curl.exe -f http://localhost:${PORT}"]
-      interval: 20s
+      test: curl -f http://localhost:${PORT}/ || exit 1
+      interval: 30s
       timeout: 5s
       retries: 3
-      start_period: 5s
+      start_period: 300s
 
   db:
     image: postgres:alpine
