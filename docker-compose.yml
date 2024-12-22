@@ -1,0 +1,44 @@
+services:
+  app:
+    build: .
+    restart: on-failure
+    ports:
+      - "${PORT}:${PORT}"
+    environment:
+      - PORT=${PORT}
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - cargo:/usr/local/cargo
+    depends_on:
+      - db
+    healthcheck:
+      test: ["CMD-SHELL", "curl.exe -f http://localhost:${PORT}"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_DATA: /var/lib/postgresql/data
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    expose:
+      - 5432
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 20s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
+volumes:
+  pgdata:
+  cargo:
