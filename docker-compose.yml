@@ -10,8 +10,7 @@ services:
     volumes:
       - cargo:/usr/local/cargo
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     healthcheck:
       test: curl -f http://localhost:${PORT}/ || exit 1
       interval: 30s
